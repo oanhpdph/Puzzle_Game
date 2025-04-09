@@ -1,43 +1,41 @@
-﻿using Assets._Data._Script.Controller;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    // List of objects to drag
-    private Canvas canvas;
+    public Dictionary<GameObject, int[,]> AllCurrentBlock;
+
     private RectTransform m_RectTransform;
     private int row = 0, col = 0;
 
     private List<GameObject> listChildren;
-    private List<GameObject> listDrop;
-    private GameObject[,] arrayCell;
+    private List<int[,]> listDrop;
 
-    private Image imageBlock;
+    private GameObject[,] arrayCell;
     private GameObject lastParent;
 
+    private Canvas canvas;
     private CanvasGroup canvasGroup;
     private bool isMatch = true;
     private Vector3 scale;
+    private Vector2 lastPosition;
+
 
     private void Start()
     {
         m_RectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
         canvasGroup = GetComponent<CanvasGroup>();
-        imageBlock = GetComponent<Image>();
 
         scale = m_RectTransform.localScale;
-        arrayCell = new GameObject[BoardController.Instance.arrayCell.GetLength(1), BoardController.Instance.arrayCell.GetLength(0)];
-        listChildren = new List<GameObject>();
-        arrayCell = BoardController.Instance.arrayCell;
+        arrayCell = CellManager._Cells;
 
+        listChildren = new List<GameObject>();
         foreach (Transform item in gameObject.transform)
         {
             listChildren.Add(item.gameObject);
-
         }
     }
     public void OnBeginDrag(PointerEventData eventData)
@@ -45,7 +43,10 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (canvas == null) return;
 
         Cursor.lockState = CursorLockMode.Confined;
+
         lastParent = transform.parent.gameObject;
+        lastPosition = transform.localPosition;
+
         transform.localScale = Vector3.one;
         canvasGroup.alpha = 0.8f;
         canvasGroup.blocksRaycasts = false;
@@ -56,15 +57,15 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (canvas == null) return;
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-
             m_RectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            listDrop = new List<GameObject>();
+            listDrop = new List<int[,]>();
             GameObject panel = GetPanelUnderMouse(eventData);
 
             if (panel != null)
             {
                 isMatch = true;
                 transform.SetParent(panel.transform);
+
 
                 col = Mathf.RoundToInt(4 + m_RectTransform.anchoredPosition.x / 100);
                 row = Mathf.RoundToInt(4 - m_RectTransform.anchoredPosition.y / 100);
@@ -74,13 +75,6 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                     isMatch = false;
                     return;
                 }
-
-                listDrop.Add(arrayCell[col, row]);
-                if (listChildren.Count > 0)
-                {
-                    DropChildren();
-                }
-
             }
             else
             {
@@ -102,32 +96,34 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     private void HandleDrop(PointerEventData eventData)
     {
-
+        DropChildren();
         if (isMatch)
         {
-            foreach (GameObject item in listDrop)
+            foreach (int[,] item in listDrop)
             {
-                Image imageItem = item.GetComponent<Image>();
+                CellManager.cells[item[0, 0], item[0, 1]] = 1;
+                GameObject block = arrayCell[item[0, 0], item[0, 1]];
+                Image imageItem = block.GetComponent<Image>();
 
-                imageItem.sprite = imageBlock.sprite;
-                imageItem.color = imageBlock.color;
-                imageItem.pixelsPerUnitMultiplier = imageBlock.pixelsPerUnitMultiplier;
-                imageItem.raycastPadding = imageBlock.raycastPadding;
+                imageItem.sprite = transform.GetChild(0).GetComponent<Image>().sprite;
+                imageItem.color = new Color(1, 1, 1, 1);
+                imageItem.pixelsPerUnitMultiplier = 100;
 
-                item.GetComponent<Cell>().Status = true;
+                block.GetComponent<Cell>().Status = 1;
             }
-            BoardController.Instance.CheckFull();
-            ShapeController.Instance.RandomShape();
-            BoardController.Instance.AddScore(float.Parse(gameObject.name[..1]));
-            AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetCollidingClip());
+
+            AllCurrentBlock.Remove(gameObject);
             Destroy(gameObject);
+            BoardController.Instance.CheckFull();
+            BoardController.Instance.UI_Score.AddScore(transform.childCount, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetCollidingClip());
         }
         else
         {
             transform.SetParent(lastParent.transform);
 
             m_RectTransform.localScale = scale;
-            m_RectTransform.anchoredPosition = Vector3.zero;
+            m_RectTransform.anchoredPosition = lastPosition;
         }
 
     }
@@ -167,12 +163,14 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                 return;
             }
 
-            if (arrayCell[colChildren, rowChildren].GetComponent<Cell>().Status == true)
+            if (arrayCell[rowChildren, colChildren].GetComponent<Cell>().Status == 1)
             {
                 isMatch = false;
                 return;
             }
-            listDrop.Add(arrayCell[colChildren, rowChildren]);
+            listDrop.Add(new int[,] { { rowChildren, colChildren } });
+
         }
+
     }
 }

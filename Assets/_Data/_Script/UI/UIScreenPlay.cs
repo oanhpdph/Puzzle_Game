@@ -1,4 +1,3 @@
-using Assets._Data._Script.Controller;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +6,7 @@ public class UIScreenPlay : MonoBehaviour
     [SerializeField] private GameObject panelPause;
     [SerializeField] private GameObject soundOn;
     [SerializeField] private GameObject soundOff;
-
+    public BlockGenerator blockGenerator;
     private void Start()
     {
         bool sound = PlayerPrefs.GetInt("SoundOn", 1) == 1;
@@ -30,19 +29,24 @@ public class UIScreenPlay : MonoBehaviour
 
     public void ReturnHome()
     {
-        SaveController.Instance.SaveGame();
+        SaveController.Save("CellData.json", CellManager.GetAllCell());
+        SaveController.Save("ScoreData.json", UI_Score.scoreData);
+        SaveController.Save("BlockData.json", blockGenerator.GetBlockData());
+
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
         AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
     }
 
     public void ReplayGame()
     {
+
+        SaveController.Save("ScoreData.json", UI_Score.scoreData.ResetData());
+        SaveController.ClearFile("CellData.json");
+        SaveController.Save("BlockData.json", new Blocks());
+
         string sceneCurrent = SceneManager.GetActiveScene().name;
-        SaveController.Instance.ClearFile();
-        PlayerPrefs.SetInt("isHigh", 0);
         SceneManager.LoadScene(sceneCurrent, LoadSceneMode.Single);
         AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
-
     }
     public void SoundSetting()
     {
@@ -68,9 +72,11 @@ public class UIScreenPlay : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        if (ShapeController.Instance.endGame == false)
-        {
-            SaveController.Instance.SaveGame();
-        }
+
+        SaveController.Save("BlockData.json", blockGenerator.GetBlockData());
+        SaveController.Save("CellData.json", CellManager.GetAllCell());
+        SaveController.Save("ScoreData.json", UI_Score.scoreData);
+
     }
 }
+

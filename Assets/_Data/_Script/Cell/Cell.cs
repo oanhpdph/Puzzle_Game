@@ -4,6 +4,5 @@
 public class Cell : MonoBehaviour
 {
 
-    [HideInInspector]
-    public bool Status = false;
+    public int Status = 0;
 }
