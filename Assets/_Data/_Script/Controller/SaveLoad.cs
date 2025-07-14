@@ -2,9 +2,9 @@
 using UnityEngine;
 
 
-public class SaveController
+public class SaveLoad : ISaveLoad
 {
-    public static void Save(string fileName, object data)
+    public void Save(string fileName, object data)
     {
         Debug.Log(Application.persistentDataPath + "/" + fileName);
 
@@ -14,7 +14,7 @@ public class SaveController
 
         System.IO.File.WriteAllText(path, json);
     }
-    public static T LoadData<T>(string fileName)
+    public T LoadData<T>(string fileName)
     {
         string path = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -28,7 +28,7 @@ public class SaveController
         return default;
     }
 
-    public static void ClearFile(string fileName)
+    public void ClearFile(string fileName)
     {
         string path = Application.persistentDataPath + "/" + fileName;
         System.IO.File.WriteAllText(path, "");

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,20 +6,18 @@ public class BoardController : MonoBehaviour
 {
     private static BoardController instance { get; set; }
     public static BoardController Instance => instance;
-
-    public Vector2 size = new(9, 9); //x is col, y is row
-    public GameObject[,] arrayCell;
+    public GameObject[,] cells;
+    public int[,] board;
     public UI_Score UI_Score;
-    public BlockGenerator blockGenerator;
-    private List<int> colFull;
-    private List<int> rowFull;
+    private List<int> colFull = new();
+    private List<int> rowFull = new();
 
     private float multiplier = 0.5f;
 
     public float score = 0;
-    public UI_EndGame UI_EndGame;
-
+    //public UI_EndGame UI_EndGame;
     private Vector3 positionScore;
+
 
     private void Awake()
     {
@@ -29,91 +25,89 @@ public class BoardController : MonoBehaviour
         {
             instance = this;
         }
+        else
+            Destroy(gameObject);
+
+        board = new int[9, 9];
+        cells = new GameObject[9, 9];
+
+        CellData[] cellData = GetCellData();
+        if (cellData != null)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    board[i, j] = cellData[9 * i + j].status;
+                }
+            }
+        }
     }
-    private void Start()
+
+    //private void OnEnable()
+    //{
+    //    GameController.Instance.onDropShape += CheckFull;
+
+    //}
+    //private void OnDisable()
+    //{
+    //    GameController.Instance.onDropShape -= CheckFull;
+
+    //}
+    public CellData[] GetCellData()
     {
-        colFull = new List<int>();
-        rowFull = new List<int>();
-        arrayCell = CellManager._Cells;
+        ISaveLoad saveLoad = new SaveLoad();
+        CellWrapper cellWrapper = saveLoad.LoadData<CellWrapper>(Flags.CELL_DATA_FILE);
+        if (cellWrapper != null)
+        {
+            return cellWrapper.arrData;
+        }
+        return default;
     }
+
     public void CheckFull()
-    {
-        LoopColumn();
-        LoopRow();
-        ClearRowAndColFull();
-
-        if (!blockGenerator.CheckPlace(blockGenerator.AllCurrentBlock.Values.ToList()))
-        {
-            UI_EndGame.EndGame();
-        };
-
-    }
-    private void LoopRow()
-    {
-        for (int row = 0; row < size.y; row++)
-        {
-            int counter = 0;
-            for (int column = 0; column < size.x; column++)
-            {
-                if (arrayCell[column, row].GetComponent<Cell>().Status == 1)
-                {
-                    counter++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (counter == size.x)
-            {
-                rowFull.Add(row);
-            }
-        }
-    }
-    private void LoopColumn()
-    {
-        for (int col = 0; col < size.y; col++)
-        {
-            int counterCol = 0;
-
-            for (int row = 0; row < size.y; row++)
-            {
-                if (arrayCell[col, row].GetComponent<Cell>().Status == 1)
-                {
-                    counterCol++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (counterCol == size.y)
-            {
-                colFull.Add(col);
-            }
-        }
-    }
-    private void ClearRowAndColFull()
     {
         ClearColFull();
         ClearRowFull();
-        StartCoroutine(Delay());
+        CalculateScore();
+    }
+
+    public void CheckRow(int row)
+    {
+        int counter = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            if (board[row, i] == 1)
+                counter++;
+            else
+                return;
+        }
+        rowFull.Add(row);
+    }
+    public void CheckCol(int col)
+    {
+        int counter = 0;
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (board[i, col] == 1)
+                counter++;
+            else
+                return;
+        }
+        colFull.Add(col);
     }
     private void ClearColFull()
     {
         if (colFull.Count == 0) return;
 
-        foreach (int col in colFull)
+        foreach (var col in colFull)
         {
-            positionScore = arrayCell[col, (int)size.y / 2].transform.position;
+            positionScore = cells[(int)9 / 2, col].transform.position;
 
-            for (int row = 0; row < size.y; row++)
+            for (int row = 0; row < 9; row++)
             {
-                //int index = (int)(col + row * size.x);
-
-                GameObject cell = arrayCell[col, row];
+                GameObject cell = cells[row, col];
                 Image imageCell = cell.GetComponent<Image>();
 
                 imageCell.sprite = SpriteController.Instance.GetSpriteDefault();
@@ -121,7 +115,7 @@ public class BoardController : MonoBehaviour
                 imageCell.pixelsPerUnitMultiplier = 1;
 
                 cell.GetComponent<Cell>().Status = 0;
-                CellManager.cells[col, row] = 0;
+                board[row, col] = 0;
             }
             multiplier += 0.5f;
             score += 10;
@@ -132,15 +126,13 @@ public class BoardController : MonoBehaviour
     {
         if (rowFull.Count == 0) return;
 
-        foreach (int row in rowFull)
+        foreach (var row in rowFull)
         {
-            positionScore = arrayCell[(int)size.x / 2, row].transform.position;
+            positionScore = cells[row, (int)9 / 2].transform.position;
 
-            for (int col = 0; col < size.y; col++)
+            for (int col = 0; col < 9; col++)
             {
-                //int index = (int)(col + row * size.y);
-
-                GameObject cell = arrayCell[col, row];
+                GameObject cell = cells[row, col];
                 Image imageCell = cell.GetComponent<Image>();
 
                 imageCell.sprite = SpriteController.Instance.GetSpriteDefault();
@@ -148,18 +140,12 @@ public class BoardController : MonoBehaviour
                 imageCell.pixelsPerUnitMultiplier = 1;
 
                 cell.GetComponent<Cell>().Status = 0;
-                CellManager.cells[col, row] = 0;
+                board[row, col] = 0;
             }
             multiplier += 0.5f;
             score += 10;
         }
         rowFull.Clear();
-    }
-
-    private IEnumerator Delay()
-    {
-        yield return new WaitUntil(() => colFull.Count == 0 && rowFull.Count == 0);
-        CalculateScore();
     }
     private void CalculateScore()
     {

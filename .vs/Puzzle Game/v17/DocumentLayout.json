@@ -7,32 +7,24 @@
       "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\block\\blockgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\cell\\cellmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\cell\\cellmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\ui\\uiscreenplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\ui\\uiscreenplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\ui\\ui_score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\ui\\ui_score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\ui\\ui_endgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\ui\\ui_endgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\class\\savedatashape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\class\\savedatashape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\statemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\statemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,15 +42,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UI_EndGame.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_EndGame.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\UI\\UI_EndGame.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_EndGame.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\UI\\UI_EndGame.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAuwBEAAAAdAAAA",
+              "DocumentIndex": 3,
+              "Title": "GameController.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAIAzwAsAAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T04:20:58.314Z"
+              "WhenOpened": "2025-07-01T14:11:49.956Z"
             },
             {
               "$type": "Document",
@@ -68,21 +60,33 @@
               "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
               "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
               "RelativeToolTip": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
-              "ViewState": "AQIAAIIAAAAAAAAAAAAowJgAAAAiAAAA",
+              "ViewState": "AQIAAFUAAAAAAAAAAAAkwHYAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T16:42:45.475Z"
+              "WhenOpened": "2025-07-01T14:02:54.59Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "CellManager.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Cell\\CellManager.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Cell\\CellManager.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Cell\\CellManager.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\Cell\\CellManager.cs",
-              "ViewState": "AQIAAEsAAAAAAAAAAAAowG4AAAAAAAAA",
+              "Title": "BoardController.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ViewState": "AQIAAHAAAAAAAAAAAADwv4UAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T09:11:40.9Z"
+              "WhenOpened": "2025-06-30T14:42:11.149Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "StateManager.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T13:49:35.997Z"
             },
             {
               "$type": "Document",
@@ -92,58 +96,22 @@
               "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
               "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
               "RelativeToolTip": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAxwBQAAAAAAAAA",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAAAE4AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T06:45:37.054Z",
+              "WhenOpened": "2025-06-30T14:40:45.401Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "BoardController.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAuwCwAAABVAAAA",
+              "Title": "SaveDataShape.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAWwAwAAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T06:19:39.3Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UIScreenPlay.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UIScreenPlay.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\UI\\UIScreenPlay.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UIScreenPlay.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\UI\\UIScreenPlay.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T15:27:23.995Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "UI_Score.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_Score.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\UI\\UI_Score.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_Score.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\UI\\UI_Score.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAuwBwAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T16:23:22.2Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "GameController.cs",
-              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
-              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
-              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
-              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABIAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-06T15:19:25.124Z"
+              "WhenOpened": "2025-06-30T16:39:18.429Z"
             }
           ]
         }

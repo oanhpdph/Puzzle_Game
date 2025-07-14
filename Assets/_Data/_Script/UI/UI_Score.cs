@@ -12,11 +12,12 @@ public class UI_Score : MonoBehaviour
     [HideInInspector]
     public static ScoreData scoreData;
     public GameObject ScorePrefab;
-    public Canvas canvas;
+    private Canvas canvas;
+    private ISaveLoad saveLoad = new SaveLoad();
 
     private void Awake()
     {
-        scoreData = SaveController.LoadData<ScoreData>("ScoreData.json");
+        scoreData = saveLoad.LoadData<ScoreData>("ScoreData.json");
         scoreData ??= new()
         {
             currentScore = 0,
@@ -27,6 +28,7 @@ public class UI_Score : MonoBehaviour
     private void Start()
     {
         DisplayScore();
+        canvas = GetComponentInParent<Canvas>();
     }
 
     public void DisplayScore()

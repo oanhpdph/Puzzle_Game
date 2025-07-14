@@ -2185,6 +2185,7 @@ GameObject:
   - component: {fileID: 709812659}
   - component: {fileID: 709812658}
   - component: {fileID: 709812657}
+  - component: {fileID: 709812660}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -2255,8 +2256,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1299089140}
-        m_TargetAssemblyTypeName: UIScreenPlay, Assembly-CSharp
+      - m_Target: {fileID: 709812660}
+        m_TargetAssemblyTypeName: BtnPauseGame, Assembly-CSharp
         m_MethodName: PauseGame
         m_Mode: 1
         m_Arguments:
@@ -2305,6 +2306,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709812655}
   m_CullTransparentMesh: 1
+--- !u!114 &709812660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709812655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb06be4538dce1438fcad2aa7b62b5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &746330798
 GameObject:
   m_ObjectHideFlags: 0
@@ -2352,9 +2365,8 @@ GameObject:
   - component: {fileID: 767245748}
   - component: {fileID: 767245750}
   - component: {fileID: 767245749}
-  - component: {fileID: 767245751}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: PanelEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2418,21 +2430,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767245747}
   m_CullTransparentMesh: 1
---- !u!114 &767245751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767245747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b29a73737905c48b9526d9cee7d6f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  endGamePanel: {fileID: 767245747}
-  score: {fileID: 1969407693}
-  goalScore: {fileID: 605997963}
 --- !u!1 &774187599
 GameObject:
   m_ObjectHideFlags: 0
@@ -3117,9 +3114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47235bcd4f6ffa046b70781bb8c19025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelPause: {fileID: 144305973}
   soundOn: {fileID: 930758740}
   soundOff: {fileID: 243890548}
+  cellManager: {fileID: 1963773907}
   blockGenerator: {fileID: 1754415358}
 --- !u!1 &1357092102
 GameObject:
@@ -3624,6 +3621,54 @@ RectTransform:
   m_AnchoredPosition: {x: -339.52, y: -60}
   m_SizeDelta: {x: 925, y: -158.65}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1745737173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1745737175}
+  - component: {fileID: 1745737174}
+  m_Layer: 0
+  m_Name: StateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1745737174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745737173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73443f06588ebd04f8029fcf43ce1756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  score: {fileID: 1969407693}
+  goalScore: {fileID: 605997963}
+  panelEndGame: {fileID: 767245747}
+  panelPause: {fileID: 144305973}
+--- !u!4 &1745737175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745737173}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7237071, y: -16.287859, z: 0.07223641}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1754415356
 GameObject:
   m_ObjectHideFlags: 0
@@ -3673,9 +3718,176 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultBlock: {fileID: 3907586508288979223, guid: 52a79116185594a45a737fed1db651d8, type: 3}
-  image: {fileID: 6530132617467461780, guid: c20855dff6343074f8d2a8da415a9865, type: 3}
-  cellManager: {fileID: 1963773907}
-  UI_EndGame: {fileID: 767245751}
+  cell: {fileID: 6530132617467461780, guid: c20855dff6343074f8d2a8da415a9865, type: 3}
+  UI_EndGame: {fileID: 0}
+  allShape:
+  - cells:
+    - {x: 0, y: 0}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+    - {x: 1, y: 0}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 2, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+  - cells:
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+  - cells:
+    - {x: 2, y: 0}
+    - {x: 2, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    - {x: 2, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    - {x: 2, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 2, y: 1}
+    - {x: 2, y: 2}
+  - cells:
+    - {x: 2, y: 0}
+    - {x: 1, y: 1}
+    - {x: 0, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+    - {x: 2, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    - {x: 2, y: 2}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 3, y: 0}
+    - {x: 4, y: 0}
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 0, y: 3}
+    - {x: 0, y: 4}
 --- !u!1 &1760359325
 GameObject:
   m_ObjectHideFlags: 0
@@ -4238,6 +4450,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1940362134}
   m_CullTransparentMesh: 1
+--- !u!1 &1944226953
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1944226955}
+  - component: {fileID: 1944226954}
+  m_Layer: 0
+  m_Name: BoardController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1944226954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944226953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad6567ed1344524da35976b8aae0ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UI_Score: {fileID: 2109190931}
+  score: 0
+--- !u!4 &1944226955
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944226953}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.098246, y: -22.411917, z: -0.083208606}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1963773902
 GameObject:
   m_ObjectHideFlags: 0
@@ -4249,7 +4507,6 @@ GameObject:
   - component: {fileID: 1963773903}
   - component: {fileID: 1963773905}
   - component: {fileID: 1963773904}
-  - component: {fileID: 1963773906}
   - component: {fileID: 1963773907}
   m_Layer: 5
   m_Name: Board
@@ -4315,23 +4572,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1963773902}
   m_CullTransparentMesh: 1
---- !u!114 &1963773906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1963773902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ad6567ed1344524da35976b8aae0ff3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: {x: 9, y: 9}
-  UI_Score: {fileID: 2109190931}
-  blockGenerator: {fileID: 1754415358}
-  score: 0
-  UI_EndGame: {fileID: 767245751}
 --- !u!114 &1963773907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4341,11 +4581,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1963773902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eba4a19a162f339499fb85bfe9ee7710, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f1ecad2de73efc4484beb361736c3c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 6881287562522821717, guid: c4438181e264dfe419307b777ad47085, type: 3}
-  size: {x: 9, y: 9}
 --- !u!1 &1969407691
 GameObject:
   m_ObjectHideFlags: 0
@@ -4678,7 +4917,6 @@ MonoBehaviour:
   currentScoreUGUI: {fileID: 98659967}
   highScoreNoti: {fileID: 1468739460}
   ScorePrefab: {fileID: 7375693895079652384, guid: 44e39fb72966b2341b1590082a56571f, type: 3}
-  canvas: {fileID: 1299089138}
 --- !u!1 &2119475753
 GameObject:
   m_ObjectHideFlags: 0
@@ -4726,3 +4964,5 @@ SceneRoots:
   - {fileID: 1259713367}
   - {fileID: 591704158}
   - {fileID: 1760359327}
+  - {fileID: 1944226955}
+  - {fileID: 1745737175}

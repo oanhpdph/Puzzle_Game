@@ -3,36 +3,27 @@ using UnityEngine.SceneManagement;
 
 public class UIScreenPlay : MonoBehaviour
 {
-    [SerializeField] private GameObject panelPause;
     [SerializeField] private GameObject soundOn;
     [SerializeField] private GameObject soundOff;
+    [SerializeField] private CellGenerator cellManager;
+
     public BlockGenerator blockGenerator;
+    private ISaveLoad saveLoad = new SaveLoad();
     private void Start()
     {
         bool sound = PlayerPrefs.GetInt("SoundOn", 1) == 1;
         ActiveGameobject(sound);
-        panelPause.SetActive(false);
-
     }
-    public void PauseGame()
-    {
-        panelPause.SetActive(true);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetOptionScreenClip());
 
-    }
     public void ContinueGame()
     {
-        panelPause.SetActive(false);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
+        GameController.Instance.CurrentState = StateGame.play;
 
     }
 
     public void ReturnHome()
     {
-        SaveController.Save("CellData.json", CellManager.GetAllCell());
-        SaveController.Save("ScoreData.json", UI_Score.scoreData);
-        SaveController.Save("BlockData.json", blockGenerator.GetBlockData());
-
+        Save();
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
         AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
     }
@@ -40,9 +31,9 @@ public class UIScreenPlay : MonoBehaviour
     public void ReplayGame()
     {
 
-        SaveController.Save("ScoreData.json", UI_Score.scoreData.ResetData());
-        SaveController.ClearFile("CellData.json");
-        SaveController.Save("BlockData.json", new Blocks());
+        saveLoad.Save(Flags.SCORE_DATA_FILE, UI_Score.scoreData.ResetData());
+        saveLoad.ClearFile(Flags.CELL_DATA_FILE);
+        saveLoad.Save(Flags.BLOCK_DATA_FILE, new SaveDataShape());
 
         string sceneCurrent = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(sceneCurrent, LoadSceneMode.Single);
@@ -72,11 +63,19 @@ public class UIScreenPlay : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-
-        SaveController.Save("BlockData.json", blockGenerator.GetBlockData());
-        SaveController.Save("CellData.json", CellManager.GetAllCell());
-        SaveController.Save("ScoreData.json", UI_Score.scoreData);
-
+        Save();
+    }
+    private void Save()
+    {
+        saveLoad.Save(Flags.BLOCK_DATA_FILE, blockGenerator.GetBlockData());
+        saveLoad.Save(Flags.CELL_DATA_FILE, cellManager.GetAllCell());
+        saveLoad.Save(Flags.SCORE_DATA_FILE, UI_Score.scoreData);
     }
 }
 
+public enum StateGame
+{
+    play,
+    pause,
+    end
+}

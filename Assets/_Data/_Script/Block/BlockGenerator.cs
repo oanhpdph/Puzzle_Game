@@ -5,159 +5,177 @@ using UnityEngine.UI;
 
 public class BlockGenerator : MonoBehaviour
 {
-    private List<int[,]> allBlock;
+    private List<CurrentBlock> currentBlocks = new();
     public GameObject defaultBlock;
 
-    public GameObject image;
-    public CellManager cellManager;
-    public Dictionary<GameObject, int[,]> AllCurrentBlock = new();
+    public GameObject cell;
     public UI_EndGame UI_EndGame;
     private void Start()
     {
-        Initalized();
         LoadBlock();
+    }
+    private void OnEnable()
+    {
+        GameController.Instance.onDropShape += CounterShapeDone;
 
     }
-
-    private void Update()
+    private void OnDisable()
     {
-        if (AllCurrentBlock.Count == 0)
-        {
+        GameController.Instance.onDropShape -= CounterShapeDone;
 
+    }
+    public void CounterShapeDone()
+    {
+        if (currentBlocks.Count(c => c.gameObject.activeSelf) == 0)
+        {
+            foreach (var item in currentBlocks)
+            {
+                Destroy(item.gameObject);
+            }
+            currentBlocks.Clear();
             GeneratorBlock();
         }
+        CheckEndGame();
+    }
+
+    private void CheckEndGame()
+    {
+        if (currentBlocks.Count == 0)
+            return;
+        foreach (var item in currentBlocks)
+        {
+            if (item.gameObject.activeSelf)
+            {
+                if (CheckPlace(GetShape(item.indexInAllShape)))
+                {
+                    return;
+                }
+            }
+        }
+
+        GameController.Instance.CurrentState = StateGame.end;
     }
     public void GeneratorBlock()
     {
-        while (AllCurrentBlock.Count < 3)
+        List<int> priorityShapes = GetSmartPriorityShape();
+        for (int i = 0; i < priorityShapes.Count; i++)
         {
-            int index = Random.Range(0, SatisfyBlock().Count);
-            int[,] block = allBlock[index];
-            DisplayBlock(block, null, AllCurrentBlock.Count);
+            DisplayBlock(priorityShapes[i], null, currentBlocks.Count);
         }
     }
 
-    //private void CalculateBlock()
-    //{
-    //    listSatisfy = new();
-    //    for (int i = 0; i < allBlock.Count; i++)
-    //    {
-    //        for (int row = 0; row < cellManager.cells.GetLength(0); row++)//x
-    //        {
-    //            for (int col = 0; col < cellManager.cells.GetLength(1); col++)//y
-    //            {
-    //                int cellValue = cellManager.cells[row, col];
-
-    //                int[,] block = allBlock[i];
-    //                bool isSkip = false;
-    //                for (int rowBlock = 0; rowBlock < block.GetLength(0); rowBlock++)
-    //                {
-    //                    for (int colBlock = 0; colBlock < block.GetLength(0); colBlock++)
-    //                    {
-    //                        if (cellValue == 1)
-    //                        {
-    //                            if (block[rowBlock, colBlock] == 1)
-    //                            {
-    //                                isSkip = true;
-    //                                break;
-    //                            }
-    //                        }
-    //                    }
-    //                    if (isSkip) break;
-    //                }
-    //                if (!isSkip)
-    //                    listSatisfy.Add(block);
-    //            }
-    //        }
-    //    }
-    //}
-    private List<int[,]> SatisfyBlock()
+    private List<int> GetSmartPriorityShape()
     {
-        List<int[,]> satisfyList = new();
-        for (int i = 0; i < allBlock.Count; i++)
+        List<(int index, int score)> scored = new();
+        for (int i = 0; i < allShape.Count; i++)
         {
-            if (CanPlace(CellManager.cells, allBlock[i]))
+            int bestScore = GetClearScore(BoardController.Instance.board, allShape[i]);
+            scored.Add((i, bestScore));
+        }
+        if (scored.Count == 0) return null;
+
+        int maxScore = scored.Max(s => s.score);
+        var sorted = scored.OrderByDescending(s => s.score).Select(s => s.index).ToList();
+
+        int count = sorted.Count;
+        int easyCount = Mathf.CeilToInt(count * 0.6f);
+
+        List<int> candidates = new();
+
+        if (easyCount > 0)
+            candidates.Add(sorted[Random.Range(0, easyCount)]);
+
+        candidates.Add(sorted[Random.Range(0, count)]);
+        candidates.Add(sorted[Random.Range(0, count)]);
+
+
+        return candidates;
+    }
+    private int GetClearScore(int[,] grid, BlockShape blockShape)
+    {
+        int width = grid.GetLength(0);
+        int heigh = grid.GetLength(1);
+        int bestScore = 0;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < heigh; y++)
             {
-                satisfyList.Add(allBlock[i]);
+                bool fits = true;
+                List<Vector2Int> posCell = new();
+                foreach (var item in blockShape.cells)
+                {
+                    int nx = item.x + x;
+                    int ny = y - item.y;
+                    if (nx >= width || ny >= heigh || nx < 0 || ny < 0 || grid[nx, ny] != 0)
+                    {
+                        fits = false;
+                        break;
+                    }
+                    posCell.Add(new(x, y));
+                }
+                if (!fits)
+                {
+                    continue;
+                }
+                int score = 0;
+                foreach (var pos in posCell)
+                {
+                    int rowFilled = 0;
+                    int colFilled = 0;
+                    for (int w = 0; w < width; w++) if (grid[w, pos.y] == 1) rowFilled++;
+                    for (int h = 0; h < heigh; h++) if (grid[pos.x, h] == 1) colFilled++;
+                    score += rowFilled + colFilled;
+                }
+                bestScore = Mathf.Max(bestScore, score);
             }
         }
-        return satisfyList;
+
+        return bestScore;
     }
     private void LoadBlock()
     {
-        Blocks blockData = SaveController.LoadData<Blocks>("BlockData.json");
-        if (blockData.blocks != null)
+        ISaveLoad saveLoad = new SaveLoad();
+        SaveDataShape blockData = saveLoad.LoadData<SaveDataShape>(Flags.BLOCK_DATA_FILE);
+        if (blockData.blocks.Count > 0)
         {
-            for (int i = 0; i < blockData.blocks.Length; i++)
+            for (int i = 0; i < blockData.blocks.Count; i++)
             {
-                if (blockData.blocks[i].block.Length > 0)
+                if (blockData.blocks[i].indexOfShape != -1)// indexOfShape default = -1
                 {
-                    int[,] block = StringToArrayInt2D(blockData.blocks[i].block);
-                    DisplayBlock(block, blockData.blocks[i].sprite, i);
+                    GameObject shapeSpawn = DisplayBlock(blockData.blocks[i].indexOfShape, blockData.blocks[i].sprite, blockData.blocks[i].id);
+                    if (!blockData.blocks[i].active)
+                    {
+                        shapeSpawn.SetActive(false);
+                    }
                 }
-            }
-            if (!CheckPlace(AllCurrentBlock.Values.ToList()))
-            {
-                UI_EndGame.EndGame();
             }
         }
         else
         {
             GeneratorBlock();
         }
-
+        CheckEndGame();
     }
-    private int[,] StringToArrayInt2D(string data)
+    private GameObject DisplayBlock(int indexBlock, string spriteName, int index)
     {
-        string[] rowBlock = data.Split("/");// ex 10/10/01/
-
-        int[,] block = new int[rowBlock.Length, rowBlock[0].Length];
-
-        for (int row = 0; row < rowBlock.Length; row++)// ex: 10
-        {
-            int[] column = rowBlock[row].Select(x => x - '0').ToArray();
-
-            for (int col = 0; col < column.Length; col++)
-            {
-                block[row, col] = column[col];
-            }
-        }
-        return block;
-    }
-
-    private GameObject DisplayBlock(int[,] objGenerator, string spriteName, int index)
-    {
+        BlockShape blockShape = allShape[indexBlock];
         Sprite sprite = GetSprite(spriteName);
-
         GameObject parrentObj = InstantiateParent(defaultBlock, transform);
-
-        for (int row = 0; row < objGenerator.GetLength(0); row++)// x
+        parrentObj.GetComponent<MultipleDrag>().blockShape = blockShape;
+        foreach (var item in blockShape.cells)
         {
-            for (int col = 0; col < objGenerator.GetLength(1); col++)//y
-            {
-                if (objGenerator[row, col] == 1)
-                {
-                    GameObject generator = Instantiate(image, parrentObj.transform);
-                    generator.GetComponent<RectTransform>().anchoredPosition = new Vector2(100 * col, -100 * row);
-                    generator.GetComponent<Image>().sprite = sprite;
-                }
-            }
+            GameObject generator = Instantiate(cell, parrentObj.transform);
+            generator.GetComponent<RectTransform>().anchoredPosition = new Vector2(100 * item.x, 100 * item.y);
+            generator.GetComponent<Image>().sprite = sprite;
         }
+        float x = blockShape.cells.Max(c => c.x);
+        float y = blockShape.cells.Max(c => c.y);
 
-        float x = objGenerator.GetLength(0);
-        float y = objGenerator.GetLength(1);
+        Vector2 position = new(x * -25, 300 - 300 * index - y * 25);//0,25,50,100
+        parrentObj.transform.localPosition = position;
 
-        y = y == 1 || y == 2 ? (y - 1) :
-                y == 3 || y == 4 ? (y + 1) :
-                y + 2;
-        x = x == 1 || x == 2 ? (x - 1) :
-                x == 3 || x == 4 ? (x + 1) :
-                x + 2;
-
-        parrentObj.transform.localPosition = new(-25 * Mathf.CeilToInt((y) / 2), 300 - (index * 300) + 25 * Mathf.CeilToInt(x / 2));
-
-        AllCurrentBlock.Add(parrentObj, objGenerator);
-        return gameObject;
+        currentBlocks.Add(new(index, indexBlock, parrentObj));
+        return parrentObj;
     }
     private Sprite GetSprite(string spriteName)
     {
@@ -165,209 +183,107 @@ public class BlockGenerator : MonoBehaviour
         {
             return SpriteController.Instance.GetRandomSpriteBlock();
         }
-        else
-        {
-            return SpriteController.Instance.GetSpriteBlock(spriteName);
-        }
+        return SpriteController.Instance.GetSpriteBlock(spriteName);
+
     }
     private GameObject InstantiateParent(GameObject patternObj, Transform transformParent)
     {
-        GameObject parrentObj = Instantiate(patternObj, transformParent);
-        parrentObj.transform.SetParent(transform);
-        parrentObj.transform.localScale = new(0.5f, 0.5f, 0.5f);
-        parrentObj.name = AllCurrentBlock.Count.ToString();
-        MultipleDrag multipleDrag = parrentObj.GetComponent<MultipleDrag>();
-        multipleDrag.AllCurrentBlock = AllCurrentBlock;
-        return parrentObj;
+        GameObject patternClone = Instantiate(patternObj, transformParent);
+        patternClone.transform.SetParent(transform);
+        patternClone.transform.localScale = new(0.5f, 0.5f, 0.5f);
+        patternClone.name = currentBlocks.Count.ToString();
+        MultipleDrag multipleDrag = patternClone.GetComponent<MultipleDrag>();
+        return patternClone;
     }
-
-    public Blocks GetBlockData()
+    public SaveDataShape GetBlockData()
     {
-        BlockData[] blockData = new BlockData[3];
-
-        foreach (var item in AllCurrentBlock)
+        List<BlockData> blockData = new();
+        foreach (var item in currentBlocks)
         {
-            int index = int.Parse(item.Key.name);
-
-            Sprite sprite = item.Key.transform.GetChild(0).GetComponent<Image>().sprite;
-            blockData[index] = new()
-            {
-                sprite = sprite.name,
-                block = Array2DToString(item.Value),
-            };
+            blockData.Add(new(item.indexInAllShape, item.gameObject.GetComponentInChildren<Image>().sprite.name, item.index, item.gameObject.activeSelf));
         }
-        return new Blocks() { blocks = blockData };
+        Debug.Log(blockData.Count);
+        return new SaveDataShape() { blocks = blockData };
     }
-
-    private string Array2DToString<T>(T[,] arr2D)
+    private bool CanPlace(int[,] board, BlockShape block)
     {
-        string data = "";
-
-        int row = arr2D.GetLength(0);
-        int col = arr2D.GetLength(1);
-        for (int i = 0; i < row; i++)// x
+        for (int row = 0; row < board.GetLength(0); row++)
         {
-            for (int j = 0; j < col; j++)//y
+            for (int col = 0; col < board.GetLength(1); col++)
             {
-                data += arr2D[i, j].ToString();
-            }
-            if (row != i + 1)
-            {
-                data += "/";
-            }
-        }
-        return data;
-    }
-
-    private bool CanPlace(int[,] board, int[,] block)
-    {
-        for (int row = 0; row <= board.GetLength(0) - block.GetLength(0); row++)
-        {
-            for (int col = 0; col <= board.GetLength(1) - block.GetLength(1); col++)
-            {
-                Debug.Log(row + " " + col);
                 if (CanPlaceAt(board, block, row, col))
+                {
                     return true;
-
+                }
             }
         }
         return false;
     }
-
-    private bool CanPlaceAt(int[,] board, int[,] block, int startRow, int startCol)
+    private bool CanPlaceAt(int[,] board, BlockShape blockShape, int startRow, int startCol)
     {
-        for (int _row = 0; _row < block.GetLength(0); _row++)
+        foreach (var item in blockShape.cells)
         {
-            for (int _col = 0; _col < block.GetLength(1); _col++)
+            int x = item.x + startRow;
+            int y = startCol - item.y;
+            if (x >= board.GetLength(0) || y >= board.GetLength(1) || x < 0 || y < 0 || board[x, y] != 0)
             {
-                if (block[_row, _col] == 1 && board[startRow + _row, startCol + _col] != 0)
-                    return false;
+                return false;
             }
         }
+
         return true;
     }
-
-    public bool CheckPlace(List<int[,]> listCheck)
+    public bool CheckPlace(BlockShape shape)
     {
-        bool result = false;
 
-        if (listCheck.Count == 0)
+        if (CanPlace(BoardController.Instance.board, shape))
         {
             return true;
         }
-        for (int i = 0; i < listCheck.Count; i++)
-        {
-            if (CanPlace(CellManager.cells, listCheck[i]))
-            {
-                result = true;
-                break;
-            }
-            result = false;
-        }
-        return result;
+        return false;
     }
-    private void Initalized()
+    public BlockShape GetShape(int index)
     {
-        allBlock = new List<int[,]>()
-        {
-            new int[,]{ { 1 } },//1
-
-            new int[,]{ { 1, 1 } },//2
-            new int[,]{ { 1 },//3
-                        { 1 } },
-
-            new int[,]{ { 1 },//4
-                        { 1 },
-                        { 1 } },
-            new int[,]{ { 1, 1, 1 } },//5
-
-            new int[,]{ { 1 , 0 },//6
-                        { 0 , 1 } },
-            new int[,]{ { 0 , 1 },//7
-                        { 1 , 0 } },
-
-            new int[,]{ { 1 , 1 },//8
-                        { 1 , 0 } },
-            new int[,]{ { 1 , 1 },//9
-                        { 0 , 1 } },
-            new int[,]{ { 1 , 0 },//10
-                        { 1 , 1 } },
-            new int[,]{ { 0 , 1 },
-                        { 1 , 1 } },
-
-            new int[,]{ { 1 , 1 },
-                        { 1 , 1 } },
-
-            new int[,]{ { 1 , 1 , 1 },
-                        { 0 , 0 , 1 } },
-            new int[,]{ { 1 , 1 , 1 },
-                        { 1 , 0 , 0 } },
-            new int[,]{ { 1 , 0 , 0 },
-                        { 1 , 1 , 1 } },
-            new int[,]{ { 0 , 0 , 1 },
-                        { 1 , 1 , 1 } },
-
-            new int[,]{ { 0 , 1 , 1 },
-                        { 1 , 1 , 0 } },
-            new int[,]{ { 1 , 1 , 0 },
-                        { 0 , 1 , 1 } },
-            new int[,]{ { 1 , 0 },
-                        { 1 , 1 },
-                        { 0 , 1 } },
-            new int[,]{ { 0 , 1 },
-                        { 1 , 1 },
-                        { 1 , 0 } },
-
-            new int[,]{ { 0 , 1 },
-                        { 0 , 1 },
-                        { 1 , 0 } },
-            new int[,]{ { 0 , 1 },
-                        { 1 , 0 },
-                        { 1 , 0 } },
-            new int[,]{ { 1 , 0 },
-                        { 1 , 0 },
-                        { 0 , 1 } },
-            new int[,]{ { 1 , 0 },
-                        { 0 , 1 },
-                        { 0 , 1 } },
-
-            new int[,]{ { 1 , 1 , 1 },
-                        { 1 , 1 , 1 } },
-            new int[,]{ { 1 , 1 },
-                        { 1 , 1 },
-                        { 1 , 1 } },
-
-            new int[,]{ { 0 , 0 , 1 },
-                        { 0 , 0 , 1 },
-                        { 1 , 1 , 1 } },
-            new int[,]{ { 1 , 1 , 1 },
-                        { 1 , 0 , 0 },
-                        { 1 , 0 , 0 } },
-            new int[,]{ { 1 , 0 , 0 },
-                        { 1 , 0 , 0 },
-                        { 1 , 1 , 1 } },
-            new int[,]{ { 1 , 1 , 1 },
-                        { 0 , 0 , 1 },
-                        { 0 , 0 , 1 } },
-
-            new int[,]{ { 0 , 0 , 1 },
-                        { 0 , 1 , 0 },
-                        { 1 , 0 , 0 } },
-            new int[,]{ { 1 , 0 , 0 },
-                        { 0 , 1 , 0 },
-                        { 0 , 0 , 1 } },
-
-            new int[,]{ { 1 , 1 , 1 },
-                        { 1 , 1 , 1 },
-                        { 1 , 1 , 1 } },
-            new int[,]{ { 1 , 1 , 1 , 1, 1 }},
-            new int[,]{ { 1 },
-                        { 1 },
-                        { 1 },
-                        { 1 },
-                        { 1 } }
-        };
-
+        Debug.Log(index);
+        return allShape[index];
     }
+    public List<BlockShape> allShape = new()
+    {
+        new BlockShape(new [] { new Vector2Int(0, 0) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 0) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(1, 2) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2), new Vector2Int(1, 2) }),
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(2, 2) }),
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0) }),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(0, 3), new Vector2Int(0, 4) }),
 
+        };
 }

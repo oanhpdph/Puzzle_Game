@@ -1,27 +1,39 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     private static GameController instance { get; set; }
     public static GameController Instance => instance;
 
-    public float goalScore;
-    public float currentScore;
-    public bool isHighScore;
-    public BlockGenerator blockGenerator;
+    public delegate void OnDropShape();
+    public event OnDropShape onDropShape;
+    public event Action<StateGame> OnChangeState = delegate { };
+    public StateGame currentState;
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
         }
     }
-    private void Start()
+    public void DropShapeAction()
     {
-        isHighScore = PlayerPrefs.GetInt("isHigh") == 1;
-        goalScore = PlayerPrefs.GetFloat("goalScore");
-        currentScore = PlayerPrefs.GetFloat("currentScore");
-
+        onDropShape?.Invoke();
     }
 
+    public StateGame CurrentState
+    {
+        get { return currentState; }
+        set
+        {
+            currentState = value;
+            OnChangeState(currentState);
+        }
+    }
 }
