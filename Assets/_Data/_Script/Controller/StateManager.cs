@@ -41,8 +41,8 @@ public class StateManager : MonoBehaviour
     public void ShowEndGame()
     {
         panelEndGame.SetActive(true);
-        score.text = UI_Score.scoreData.currentScore.ToString();
-        goalScore.text = UI_Score.scoreData.goalScore.ToString();
+        score.text = GameController.Instance.scoreData.currentScore.ToString();
+        goalScore.text = GameController.Instance.scoreData.goalScore.ToString();
 
     }
     public void ShowPausePanel()

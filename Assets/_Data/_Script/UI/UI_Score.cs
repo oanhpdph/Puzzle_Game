@@ -10,23 +10,18 @@ public class UI_Score : MonoBehaviour
     [SerializeField] private GameObject highScoreNoti;
 
     [HideInInspector]
-    public static ScoreData scoreData;
+    private ScoreData scoreData;
     public GameObject ScorePrefab;
     private Canvas canvas;
-    private ISaveLoad saveLoad = new SaveLoad();
-
-    private void Awake()
+    private void Start()
     {
-        scoreData = saveLoad.LoadData<ScoreData>("ScoreData.json");
+        scoreData = GameController.Instance.scoreData;
         scoreData ??= new()
         {
             currentScore = 0,
             goalScore = 0,
             isHighScore = true
         };
-    }
-    private void Start()
-    {
         DisplayScore();
         canvas = GetComponentInParent<Canvas>();
     }

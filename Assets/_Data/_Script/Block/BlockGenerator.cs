@@ -10,8 +10,14 @@ public class BlockGenerator : MonoBehaviour
 
     public GameObject cell;
     public UI_EndGame UI_EndGame;
+    private List<Vector2> direction = new();
     private void Start()
     {
+        direction.Add(Vector2.left);
+        direction.Add(Vector2.right);
+        direction.Add(Vector2.up);
+        direction.Add(Vector2.down);
+
         LoadBlock();
     }
     private void OnEnable()
@@ -66,43 +72,46 @@ public class BlockGenerator : MonoBehaviour
 
     private List<int> GetSmartPriorityShape()
     {
-        List<(int index, int score)> scored = new();
+        List<(int index, int score, int adjacentCell)> scored = new();
         for (int i = 0; i < allShape.Count; i++)
         {
-            int bestScore = GetClearScore(BoardController.Instance.board, allShape[i]);
-            scored.Add((i, bestScore));
+            int bestScore, bestAdjacentCell;
+            (bestScore, bestAdjacentCell) = GetConditionPoint(BoardController.Instance.board, allShape[i]);
+            scored.Add((i, bestScore, bestAdjacentCell));
         }
         if (scored.Count == 0) return null;
 
         int maxScore = scored.Max(s => s.score);
-        var sorted = scored.OrderByDescending(s => s.score).Select(s => s.index).ToList();
+        var sorted = scored.OrderByDescending(s => s.adjacentCell).ThenByDescending(s => s.score).Select(s => s.index).ToList();
 
         int count = sorted.Count;
-        int easyCount = Mathf.CeilToInt(count * 0.6f);
+        float propotion = Mathf.Clamp01(0.3f + GameController.Instance.scoreData.currentScore / 500);
+        int easyCount = Mathf.CeilToInt(count * propotion);
 
         List<int> candidates = new();
 
         if (easyCount > 0)
+        {
             candidates.Add(sorted[Random.Range(0, easyCount)]);
-
-        candidates.Add(sorted[Random.Range(0, count)]);
-        candidates.Add(sorted[Random.Range(0, count)]);
-
-
+            candidates.Add(sorted[Random.Range(0, easyCount)]);
+            candidates.Add(sorted[Random.Range(0, easyCount)]);
+        }
         return candidates;
     }
-    private int GetClearScore(int[,] grid, BlockShape blockShape)
+    private (int, int) GetConditionPoint(int[,] grid, BlockShape blockShape)
     {
         int width = grid.GetLength(0);
         int heigh = grid.GetLength(1);
         int bestScore = 0;
+        int bestAdjacentCell = 0;
+        int[,] copyBoard = CopyBoard(grid);
         for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < heigh; y++)
+            for (int y = 0; y < heigh; y++)// loop cell in board
             {
                 bool fits = true;
                 List<Vector2Int> posCell = new();
-                foreach (var item in blockShape.cells)
+                foreach (var item in blockShape.cells)// loop each cell in block shape
                 {
                     int nx = item.x + x;
                     int ny = y - item.y;
@@ -111,26 +120,75 @@ public class BlockGenerator : MonoBehaviour
                         fits = false;
                         break;
                     }
-                    posCell.Add(new(x, y));
+                    copyBoard[nx, ny] = 1;
+                    posCell.Add(new(nx, ny));
                 }
                 if (!fits)
                 {
+                    ResetBoard(copyBoard, posCell);
                     continue;
                 }
+
                 int score = 0;
+                int adjacentCell = 0;
+
                 foreach (var pos in posCell)
                 {
-                    int rowFilled = 0;
-                    int colFilled = 0;
-                    for (int w = 0; w < width; w++) if (grid[w, pos.y] == 1) rowFilled++;
-                    for (int h = 0; h < heigh; h++) if (grid[pos.x, h] == 1) colFilled++;
-                    score += rowFilled + colFilled;
+                    score += GetClearScore(pos, copyBoard);
+                    adjacentCell += GetNumberAdjacentCell(pos, grid);
                 }
+                bestAdjacentCell = Mathf.Max(bestAdjacentCell, adjacentCell);
                 bestScore = Mathf.Max(bestScore, score);
+                ResetBoard(copyBoard, posCell);
             }
         }
 
-        return bestScore;
+        return (bestScore, bestAdjacentCell);
+    }
+
+    private void ResetBoard(int[,] board, List<Vector2Int> posCell)
+    {
+        foreach (Vector2Int item in posCell)
+        {
+            board[item.x, item.y] = 0;
+        }
+    }
+    private int GetNumberAdjacentCell(Vector2Int origin, int[,] grid)
+    {
+        int counter = 0;
+        foreach (var item in direction)
+        {
+            Vector2 nearCell = origin + item;
+            if (grid[origin.x, origin.y] == 1)
+            {
+                counter++;
+            }
+        }
+        return counter;
+    }
+    private int GetClearScore(Vector2Int origin, int[,] grid)
+    {
+        int width = grid.GetLength(0);
+        int heigh = grid.GetLength(1);
+
+        int score = 0;
+        int rowFilled = 0;
+        int colFilled = 0;
+        for (int w = 0; w < width; w++) if (grid[w, origin.y] == 1) rowFilled++;
+        for (int h = 0; h < heigh; h++) if (grid[origin.x, h] == 1) colFilled++;
+        return score += rowFilled / 9 + colFilled / 9;
+    }
+    private int[,] CopyBoard(int[,] grid)
+    {
+        int[,] boardCopy = new int[grid.GetLength(0), grid.GetLength(1)];
+        for (int i = 0; i < boardCopy.GetLength(0); i++)
+        {
+            for (int j = 0; j < boardCopy.GetLength(1); j++)
+            {
+                boardCopy[i, j] = grid[i, j];
+            }
+        }
+        return boardCopy;
     }
     private void LoadBlock()
     {
@@ -244,7 +302,6 @@ public class BlockGenerator : MonoBehaviour
     }
     public BlockShape GetShape(int index)
     {
-        Debug.Log(index);
         return allShape[index];
     }
     public List<BlockShape> allShape = new()

@@ -31,7 +31,7 @@ public class UIScreenPlay : MonoBehaviour
     public void ReplayGame()
     {
 
-        saveLoad.Save(Flags.SCORE_DATA_FILE, UI_Score.scoreData.ResetData());
+        saveLoad.Save(Flags.SCORE_DATA_FILE, GameController.Instance.scoreData.ResetData());
         saveLoad.ClearFile(Flags.CELL_DATA_FILE);
         saveLoad.Save(Flags.BLOCK_DATA_FILE, new SaveDataShape());
 
@@ -69,7 +69,7 @@ public class UIScreenPlay : MonoBehaviour
     {
         saveLoad.Save(Flags.BLOCK_DATA_FILE, blockGenerator.GetBlockData());
         saveLoad.Save(Flags.CELL_DATA_FILE, cellManager.GetAllCell());
-        saveLoad.Save(Flags.SCORE_DATA_FILE, UI_Score.scoreData);
+        saveLoad.Save(Flags.SCORE_DATA_FILE, GameController.Instance.scoreData);
     }
 }
 

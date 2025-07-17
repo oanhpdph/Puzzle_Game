@@ -149,4 +149,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMeshProUGUI: {fileID: 0}
   lifeTime: 0.5
-  floatUpSpeed: 6
+  floatUpSpeed: 4

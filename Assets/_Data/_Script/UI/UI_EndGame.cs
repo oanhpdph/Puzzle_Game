@@ -13,8 +13,8 @@ public class UI_EndGame : MonoBehaviour
     public void EndGame()
     {
         this.gameObject.SetActive(true);
-        score.text = UI_Score.scoreData.currentScore.ToString();
-        goalScore.text = UI_Score.scoreData.goalScore.ToString();
+        score.text = GameController.Instance.scoreData.currentScore.ToString();
+        goalScore.text = GameController.Instance.scoreData.goalScore.ToString();
 
     }
 }

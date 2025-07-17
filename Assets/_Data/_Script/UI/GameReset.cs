@@ -4,9 +4,13 @@ public class GameReset : MonoBehaviour
 {
     private ISaveLoad saveLoad = new SaveLoad();
 
+    private void Start()
+    {
+        ResetData();
+    }
     public void ResetData()
     {
-        saveLoad.Save("ScoreData.json", UI_Score.scoreData.ResetData());
+        saveLoad.Save("ScoreData.json", GameController.Instance.scoreData.ResetData());
         saveLoad.ClearFile("CellData.json");
 
     }

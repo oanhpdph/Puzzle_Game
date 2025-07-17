@@ -10,8 +10,13 @@ public class GameController : MonoBehaviour
     public event OnDropShape onDropShape;
     public event Action<StateGame> OnChangeState = delegate { };
     public StateGame currentState;
+    public ScoreData scoreData;
+    private ISaveLoad saveLoad = new SaveLoad();
+
     private void Awake()
     {
+        scoreData = saveLoad.LoadData<ScoreData>("ScoreData.json");
+
         if (instance == null)
         {
             instance = this;

@@ -1,0 +1,186 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Puzzle Game\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|d:\\puzzle game\\assets\\_data\\_script\\ui\\gamereset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\ui\\gamereset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|d:\\puzzle game\\assets\\_data\\_script\\class\\currentblock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\class\\currentblock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\class\\savedatashape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\class\\savedatashape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\block\\blockgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\block\\blockgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\saveload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\saveload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\class\\cellwrapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\class\\cellwrapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\statemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\statemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameReset.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\GameReset.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\UI\\GameReset.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\GameReset.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\UI\\GameReset.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T13:20:05.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CurrentBlock.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\CurrentBlock.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Class\\CurrentBlock.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\CurrentBlock.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Class\\CurrentBlock.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-14T03:48:10.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CellWrapper.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\CellWrapper.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Class\\CellWrapper.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\CellWrapper.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Class\\CellWrapper.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-14T03:48:07.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SaveLoad.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\SaveLoad.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\SaveLoad.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\SaveLoad.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\SaveLoad.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-14T03:47:58.463Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GameController.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\GameController.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAIAxwBcAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-01T14:11:49.956Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BlockGenerator.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
+              "ViewState": "AQIAAN4AAAAAAAAAAAAAAOoAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T14:40:45.401Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SaveDataShape.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Class\\SaveDataShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAWwAwAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T16:39:18.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MultipleDrag.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "ViewState": "AQIAALMAAAAAAAAAAAAUwMAAAABXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-01T14:02:54.59Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BoardController.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ViewState": "AQIAAIUAAAAAAAAAAAAAAIwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T14:42:11.149Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "StateManager.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\StateManager.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T13:49:35.997Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
