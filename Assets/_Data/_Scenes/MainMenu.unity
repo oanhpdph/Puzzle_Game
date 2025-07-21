@@ -152,6 +152,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
+  scoreData:
+    currentScore: 0
+    goalScore: 0
+    isHighScore: 0
 --- !u!4 &492777034
 Transform:
   m_ObjectHideFlags: 0
@@ -1156,6 +1160,10 @@ PrefabInstance:
     - target: {fileID: 1354371571300783172, guid: 5fec22cff31013941953798d8e4721c6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4474449072527983486, guid: 5fec22cff31013941953798d8e4721c6, type: 3}
+      propertyPath: m_audioClip
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8318482988729456320, guid: 5fec22cff31013941953798d8e4721c6, type: 3}
       propertyPath: m_Name

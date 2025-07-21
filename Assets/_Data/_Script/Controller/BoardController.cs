@@ -1,11 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BoardController : MonoBehaviour
 {
     private static BoardController instance { get; set; }
-    public static BoardController Instance => instance;
+    public static BoardController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<BoardController>();
+            }
+            return instance;
+        }
+    }
     public GameObject[,] cells;
     public int[,] board;
     public UI_Score UI_Score;
@@ -15,19 +24,15 @@ public class BoardController : MonoBehaviour
     private float multiplier = 0.5f;
 
     public float score = 0;
-    //public UI_EndGame UI_EndGame;
     private Vector3 positionScore;
-
+    private int combo = 0;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-            Destroy(gameObject);
-
+        Init();
+    }
+    private void Init()
+    {
         board = new int[9, 9];
         cells = new GameObject[9, 9];
 
@@ -43,17 +48,6 @@ public class BoardController : MonoBehaviour
             }
         }
     }
-
-    //private void OnEnable()
-    //{
-    //    GameController.Instance.onDropShape += CheckFull;
-
-    //}
-    //private void OnDisable()
-    //{
-    //    GameController.Instance.onDropShape -= CheckFull;
-
-    //}
     public CellData[] GetCellData()
     {
         ISaveLoad saveLoad = new SaveLoad();
@@ -67,92 +61,81 @@ public class BoardController : MonoBehaviour
 
     public void CheckFull()
     {
-        ClearColFull();
-        ClearRowFull();
+        CheckCombo();
+        Clear();
         CalculateScore();
     }
 
-    public void CheckRow(int row)
+    public void FillRowCol(int row, int col)
     {
-        int counter = 0;
+        int counterRow = 0;
+        int counterCol = 0;
         for (int i = 0; i < 9; i++)
         {
             if (board[row, i] == 1)
-                counter++;
-            else
-                return;
+                counterRow++;
+            if (board[i, col] == 1)
+                counterCol++;
         }
-        rowFull.Add(row);
+
+        if (counterRow == 9)
+            rowFull.Add(row);
+        if (counterCol == 9)
+            colFull.Add(col);
     }
-    public void CheckCol(int col)
+    private void CheckCombo()
     {
-        int counter = 0;
+        if (colFull.Count != 0 || rowFull.Count != 0)
+        {
+            combo++;
+        }
+        else
+        {
+            combo = 0;
+        }
+    }
+    private void Clear()
+    {
+        if (rowFull.Count == 0 && colFull.Count == 0) return;
 
         for (int i = 0; i < 9; i++)
         {
-            if (board[i, col] == 1)
-                counter++;
-            else
-                return;
-        }
-        colFull.Add(col);
-    }
-    private void ClearColFull()
-    {
-        if (colFull.Count == 0) return;
-
-        foreach (var col in colFull)
-        {
-            positionScore = cells[(int)9 / 2, col].transform.position;
-
-            for (int row = 0; row < 9; row++)
+            foreach (var row in rowFull)//clear row
             {
-                GameObject cell = cells[row, col];
-                Image imageCell = cell.GetComponent<Image>();
+                if (board[row, i] == 0)
+                    continue;
+                positionScore = cells[row, 9 / 2].transform.position;
+                Cell cell = cells[row, i].GetComponent<Cell>();
+                cell.ResetCell();
 
-                imageCell.sprite = SpriteController.Instance.GetSpriteDefault();
-                imageCell.color = new(0.9f, 0.65f, 0.4f, 1);
-                imageCell.pixelsPerUnitMultiplier = 1;
-
-                cell.GetComponent<Cell>().Status = 0;
-                board[row, col] = 0;
+                board[row, i] = 0;
             }
-            multiplier += 0.5f;
-            score += 10;
-        }
-        colFull.Clear();
-    }
-    private void ClearRowFull()
-    {
-        if (rowFull.Count == 0) return;
-
-        foreach (var row in rowFull)
-        {
-            positionScore = cells[row, (int)9 / 2].transform.position;
-
-            for (int col = 0; col < 9; col++)
+            foreach (var col in colFull)//clear col
             {
-                GameObject cell = cells[row, col];
-                Image imageCell = cell.GetComponent<Image>();
+                if (board[i, col] == 0)
+                    continue;
+                positionScore = cells[9 / 2, col].transform.position;
+                Cell cell = cells[i, col].GetComponent<Cell>();
+                cell.ResetCell();
 
-                imageCell.sprite = SpriteController.Instance.GetSpriteDefault();
-                imageCell.color = new(0.9f, 0.65f, 0.4f, 1);
-                imageCell.pixelsPerUnitMultiplier = 1;
-
-                cell.GetComponent<Cell>().Status = 0;
-                board[row, col] = 0;
+                board[i, col] = 0;
             }
-            multiplier += 0.5f;
-            score += 10;
         }
+        score += 10 * (rowFull.Count + colFull.Count);
+        multiplier += 0.5f * (rowFull.Count + colFull.Count);
         rowFull.Clear();
+        colFull.Clear();
     }
     private void CalculateScore()
     {
         if (multiplier > 0.5f)
         {
             score *= multiplier;
-            UI_Score.AddScore(score, positionScore);
+            if (combo >= 2)
+            {
+                score *= 2;
+            }
+            UI_Score.AddScore(score, positionScore, combo);
             score = 0;
             multiplier = 0.5f;
         }

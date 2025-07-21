@@ -5,6 +5,18 @@
     {
       "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|d:\\puzzle game\\assets\\_data\\_script\\block\\blockgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\block\\blockgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\ui\\ui_score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\ui\\ui_score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\draganddrop\\multipledrag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|D:\\Puzzle Game\\assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{013C56E7-262C-9789-FBEE-548453BE4D5D}|Assembly-CSharp.csproj|solutionrelative:assets\\_data\\_script\\controller\\boardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,11 +26,51 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MultipleDrag.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\DragAndDrop\\MultipleDrag.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAowHkAAACDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-19T19:56:11.649Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UI_Score.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_Score.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\UI\\UI_Score.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\UI\\UI_Score.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\UI\\UI_Score.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwDMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-19T19:54:45.305Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BoardController.cs",
+              "DocumentMoniker": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "RelativeToolTip": "Assets\\_Data\\_Script\\Controller\\BoardController.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAQwIcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-19T18:17:33.223Z"
             },
             {
               "$type": "Document",
@@ -28,14 +80,10 @@
               "RelativeDocumentMoniker": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
               "ToolTip": "D:\\Puzzle Game\\Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
               "RelativeToolTip": "Assets\\_Data\\_Script\\Block\\BlockGenerator.cs",
-              "ViewState": "AgIAAIMAAAAAAAAAAADgv4sAAABLAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-17T14:53:52.622Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
             }
           ]
         }

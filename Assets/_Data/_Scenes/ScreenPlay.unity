@@ -2923,7 +2923,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1299089139}
     m_Modifications:
     - target: {fileID: 100000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_Name
@@ -2938,16 +2938,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -9720
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2955,15 +2967,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2976,6 +2988,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 21200000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
       propertyPath: m_Sprite
@@ -2994,6 +3010,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+--- !u!4 &1259713368 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 85dcfa13ec7d112419b91b7a5e13dedb, type: 3}
+  m_PrefabInstance: {fileID: 1259713367}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1299089135
 GameObject:
   m_ObjectHideFlags: 0
@@ -3095,6 +3116,7 @@ RectTransform:
   - {fileID: 2119475754}
   - {fileID: 1117243166}
   - {fileID: 477239847}
+  - {fileID: 1259713368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3717,109 +3739,174 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4a4608a0c050e4197bb3d215d42f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultBlock: {fileID: 3907586508288979223, guid: 52a79116185594a45a737fed1db651d8, type: 3}
-  cell: {fileID: 6530132617467461780, guid: c20855dff6343074f8d2a8da415a9865, type: 3}
-  UI_EndGame: {fileID: 0}
   allShape:
   - cells:
     - {x: 0, y: 0}
+    maxAdjacentCell: 4
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
+    maxAdjacentCell: 6
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
+    maxAdjacentCell: 6
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 8
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
+    maxAdjacentCell: 8
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
+    maxAdjacentCell: 8
   - cells:
     - {x: 1, y: 0}
     - {x: 0, y: 1}
-  - cells:
-    - {x: 0, y: 0}
-    - {x: 1, y: 0}
-    - {x: 0, y: 1}
-  - cells:
-    - {x: 0, y: 0}
-    - {x: 1, y: 1}
-    - {x: 1, y: 0}
-  - cells:
-    - {x: 0, y: 0}
-    - {x: 0, y: 1}
-    - {x: 1, y: 1}
-  - cells:
-    - {x: 1, y: 0}
-    - {x: 0, y: 1}
-    - {x: 1, y: 1}
+    maxAdjacentCell: 8
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 0, y: 1}
+    maxAdjacentCell: 8
+  - cells:
+    - {x: 0, y: 0}
     - {x: 1, y: 1}
+    - {x: 1, y: 0}
+    maxAdjacentCell: 8
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    maxAdjacentCell: 8
+  - cells:
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    maxAdjacentCell: 8
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    maxAdjacentCell: 8
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 2, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 0, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 2, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 2, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 2, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 1, y: 2}
+    maxAdjacentCell: 10
   - cells:
     - {x: 1, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 10
+  - cells:
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+    - {x: 1, y: 0}
+    maxAdjacentCell: 10
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 1}
+    maxAdjacentCell: 10
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 1, y: 1}
+    maxAdjacentCell: 10
+  - cells:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+    maxAdjacentCell: 10
   - cells:
     - {x: 1, y: 0}
     - {x: 1, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 9
   - cells:
     - {x: 1, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 9
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 2}
+    maxAdjacentCell: 9
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     - {x: 1, y: 2}
+    maxAdjacentCell: 9
+  - cells:
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 2, y: 0}
+    maxAdjacentCell: 9
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 1}
+    - {x: 2, y: 1}
+    maxAdjacentCell: 9
+  - cells:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 1}
+    maxAdjacentCell: 9
+  - cells:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    maxAdjacentCell: 9
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -3827,6 +3914,7 @@ MonoBehaviour:
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 2, y: 1}
+    maxAdjacentCell: 10
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -3834,38 +3922,52 @@ MonoBehaviour:
     - {x: 1, y: 1}
     - {x: 0, y: 2}
     - {x: 1, y: 2}
+    maxAdjacentCell: 10
   - cells:
     - {x: 2, y: 0}
     - {x: 2, y: 1}
     - {x: 0, y: 2}
     - {x: 1, y: 2}
     - {x: 2, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
     - {x: 1, y: 2}
     - {x: 2, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 2, y: 1}
     - {x: 2, y: 2}
+    maxAdjacentCell: 12
+  - cells:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+    - {x: 2, y: 1}
+    maxAdjacentCell: 12
   - cells:
     - {x: 2, y: 0}
     - {x: 1, y: 1}
     - {x: 0, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -3876,18 +3978,21 @@ MonoBehaviour:
     - {x: 0, y: 2}
     - {x: 1, y: 2}
     - {x: 2, y: 2}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     - {x: 2, y: 0}
     - {x: 3, y: 0}
     - {x: 4, y: 0}
+    maxAdjacentCell: 12
   - cells:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
     - {x: 0, y: 3}
     - {x: 0, y: 4}
+    maxAdjacentCell: 12
 --- !u!1 &1760359325
 GameObject:
   m_ObjectHideFlags: 0
@@ -4917,6 +5022,7 @@ MonoBehaviour:
   currentScoreUGUI: {fileID: 98659967}
   highScoreNoti: {fileID: 1468739460}
   ScorePrefab: {fileID: 7375693895079652384, guid: 44e39fb72966b2341b1590082a56571f, type: 3}
+  ComboPrefab: {fileID: 7375693895079652384, guid: ac762db38faaf0b45a3dce037ffa3d7a, type: 3}
 --- !u!1 &2119475753
 GameObject:
   m_ObjectHideFlags: 0
@@ -4961,7 +5067,6 @@ SceneRoots:
   - {fileID: 1299089139}
   - {fileID: 2046515910}
   - {fileID: 901077797}
-  - {fileID: 1259713367}
   - {fileID: 591704158}
   - {fileID: 1760359327}
   - {fileID: 1944226955}

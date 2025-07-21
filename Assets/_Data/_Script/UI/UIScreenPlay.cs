@@ -25,7 +25,7 @@ public class UIScreenPlay : MonoBehaviour
     {
         Save();
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
+        //AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
     }
 
     public void ReplayGame()
@@ -37,7 +37,7 @@ public class UIScreenPlay : MonoBehaviour
 
         string sceneCurrent = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(sceneCurrent, LoadSceneMode.Single);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
+        //AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
     }
     public void SoundSetting()
     {

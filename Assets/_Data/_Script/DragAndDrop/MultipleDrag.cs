@@ -114,18 +114,16 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                 imageItem.pixelsPerUnitMultiplier = 100;
 
                 cell.Status = 1;
-                BoardController.Instance.CheckCol(col);
-                BoardController.Instance.CheckRow(row);
+                //BoardController.Instance.CheckCol(col);
+                BoardController.Instance.FillRowCol(row, col);
             }
             BoardController.Instance.CheckFull();
 
-            BoardController.Instance.UI_Score.AddScore(transform.childCount, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            BoardController.Instance.UI_Score.AddScore(transform.childCount, Camera.main.ScreenToWorldPoint(Input.mousePosition), 0);
             AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetCollidingClip());
             gameObject.SetActive(false);
             GameController.Instance.DropShapeAction();
-
         }
-
         BackToPosition();
     }
 

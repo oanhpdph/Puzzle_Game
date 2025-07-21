@@ -9,10 +9,10 @@ public class UI_Score : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentScoreUGUI;
     [SerializeField] private GameObject highScoreNoti;
 
-    [HideInInspector]
     private ScoreData scoreData;
-    public GameObject ScorePrefab;
     private Canvas canvas;
+    public GameObject ScorePrefab;
+    public GameObject ComboPrefab;
     private void Start()
     {
         scoreData = GameController.Instance.scoreData;
@@ -46,15 +46,20 @@ public class UI_Score : MonoBehaviour
     private IEnumerator ShowHighScoreNotification()
     {
         highScoreNoti.SetActive(true);
+        AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetWinClip());
         yield return new WaitForSeconds(1.5f);
         highScoreNoti.SetActive(false);
     }
-    public void AddScore(float score, Vector2 worldPosition)
+    public void AddScore(float score, Vector2 worldPosition, int combo)
     {
         GameObject popup = Instantiate(ScorePrefab, canvas.transform);
-
+        if (combo >= 2)
+        {
+            GameObject popupCombo = Instantiate(ComboPrefab, canvas.transform);
+            popupCombo.GetComponent<TextMeshProUGUI>().text = $"Combo x{combo}";
+        }
         popup.transform.position = worldPosition;
-        popup.GetComponent<TextMeshProUGUI>().text = score.ToString();
+        popup.GetComponent<TextMeshProUGUI>().text = "+" + score.ToString();
         scoreData.currentScore += score;
         DisplayScore();
     }

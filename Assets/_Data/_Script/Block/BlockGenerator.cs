@@ -1,27 +1,55 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 public class BlockGenerator : MonoBehaviour
 {
     private List<CurrentBlock> currentBlocks = new();
-    public GameObject defaultBlock;
+    private GameObject defaultBlock;
 
-    public GameObject cell;
-    public UI_EndGame UI_EndGame;
-    private List<Vector2> direction = new();
-    private void Start()
+    private GameObject cell;
+    private List<Vector2Int> direction = new();
+    //private async void Awake()
+    //{
+    //    defaultBlock = await LoadAssets("DefaultBlock");
+    //    cell = await LoadAssets("ImageDefault");
+
+    //}
+    private async Task<GameObject> LoadAssets(string name)
     {
-        direction.Add(Vector2.left);
-        direction.Add(Vector2.right);
-        direction.Add(Vector2.up);
-        direction.Add(Vector2.down);
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(name);
 
+        await handle.Task; // Chờ đến khi handle hoàn thành
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            return handle.Result;
+        }
+        else
+        {
+            Debug.LogError($"Failed to load Addressable: {name}");
+            return null;
+        }
+    }
+    private async void Start()
+    {
+        defaultBlock = await LoadAssets("DefaultBlock");
+        cell = await LoadAssets("ImageDefault");
+        direction.Add(Vector2Int.left);
+        direction.Add(Vector2Int.right);
+        direction.Add(Vector2Int.up);
+        direction.Add(Vector2Int.down);
         LoadBlock();
     }
-    private void OnEnable()
+    private async void OnEnable()
     {
+        //defaultBlock = await LoadAssets("DefaultBlock");
+        //cell = await LoadAssets("ImageDefault");
+
         GameController.Instance.onDropShape += CounterShapeDone;
 
     }
@@ -52,7 +80,7 @@ public class BlockGenerator : MonoBehaviour
         {
             if (item.gameObject.activeSelf)
             {
-                if (CheckPlace(GetShape(item.indexInAllShape)))
+                if (CanPlace(BoardController.Instance.board, GetShape(item.indexInAllShape)))
                 {
                     return;
                 }
@@ -64,6 +92,8 @@ public class BlockGenerator : MonoBehaviour
     public void GeneratorBlock()
     {
         List<int> priorityShapes = GetSmartPriorityShape();
+
+
         for (int i = 0; i < priorityShapes.Count; i++)
         {
             DisplayBlock(priorityShapes[i], null, currentBlocks.Count);
@@ -72,30 +102,47 @@ public class BlockGenerator : MonoBehaviour
 
     private List<int> GetSmartPriorityShape()
     {
+
+        List<int> candidates;
+        if (GameController.Instance.scoreData.currentScore == 0)
+        {
+            candidates = new List<int>() {
+                Random.Range(0, allShape.Count),
+                Random.Range(0, allShape.Count),
+                Random.Range(0, allShape.Count), };
+            return candidates;
+        }
         List<(int index, int score, int adjacentCell)> scored = new();
-        for (int i = 0; i < allShape.Count; i++)
+        List<(int index, BlockShape shape)> priorityShape = GetPriorityShape();
+        for (int i = 0; i < priorityShape.Count; i++)
         {
             int bestScore, bestAdjacentCell;
-            (bestScore, bestAdjacentCell) = GetConditionPoint(BoardController.Instance.board, allShape[i]);
-            scored.Add((i, bestScore, bestAdjacentCell));
+            (bestScore, bestAdjacentCell) = GetConditionPoint(BoardController.Instance.board, priorityShape[i].shape);
+            scored.Add((priorityShape[i].index, bestScore, bestAdjacentCell));
         }
         if (scored.Count == 0) return null;
 
         int maxScore = scored.Max(s => s.score);
-        var sorted = scored.OrderByDescending(s => s.adjacentCell).ThenByDescending(s => s.score).Select(s => s.index).ToList();
+        var sorted = scored.OrderByDescending(s => (s.adjacentCell == allShape[s.index].maxAdjacentCell))
+            .ThenByDescending(s => s.score)
+            .ThenByDescending(s => s.adjacentCell).Select(s => s.index).ToList();
 
         int count = sorted.Count;
-        float propotion = Mathf.Clamp01(0.3f + GameController.Instance.scoreData.currentScore / 500);
-        int easyCount = Mathf.CeilToInt(count * propotion);
 
-        List<int> candidates = new();
-
-        if (easyCount > 0)
+        int easyCount = 1;
+        int middleCount = 6;
+        int hardCount = count;
+        if (GameController.Instance.scoreData.isHighScore)
         {
-            candidates.Add(sorted[Random.Range(0, easyCount)]);
-            candidates.Add(sorted[Random.Range(0, easyCount)]);
-            candidates.Add(sorted[Random.Range(0, easyCount)]);
+            easyCount *= 2;
+            middleCount *= 2;
         }
+        candidates = new()
+        {
+            sorted[Random.Range(0, Mathf.Clamp(easyCount,0,count))],
+            sorted[Random.Range(0, Mathf.Clamp(middleCount,0,count))],
+            sorted[Random.Range(0, count)]
+        };
         return candidates;
     }
     private (int, int) GetConditionPoint(int[,] grid, BlockShape blockShape)
@@ -158,8 +205,13 @@ public class BlockGenerator : MonoBehaviour
         int counter = 0;
         foreach (var item in direction)
         {
-            Vector2 nearCell = origin + item;
-            if (grid[origin.x, origin.y] == 1)
+            Vector2Int nearCell = origin + item;
+            if (nearCell.x >= grid.GetLength(0) || nearCell.y >= grid.GetLength(1) || nearCell.x < 0 || nearCell.y < 0)
+            {
+                counter++;
+                continue;
+            }
+            if (grid[nearCell.x, nearCell.y] == 1)
             {
                 counter++;
             }
@@ -178,6 +230,7 @@ public class BlockGenerator : MonoBehaviour
         for (int h = 0; h < heigh; h++) if (grid[origin.x, h] == 1) colFilled++;
         return score += rowFilled / 9 + colFilled / 9;
     }
+
     private int[,] CopyBoard(int[,] grid)
     {
         int[,] boardCopy = new int[grid.GetLength(0), grid.GetLength(1)];
@@ -189,6 +242,16 @@ public class BlockGenerator : MonoBehaviour
             }
         }
         return boardCopy;
+    }
+    private List<(int, BlockShape)> GetPriorityShape()
+    {
+        List<(int, BlockShape)> priorityShape = new();
+        for (int i = 0; i < allShape.Count; i++)
+        {
+            if (CanPlace(BoardController.Instance.board, allShape[i]))
+                priorityShape.Add((i, allShape[i]));
+        }
+        return priorityShape;
     }
     private void LoadBlock()
     {
@@ -306,41 +369,67 @@ public class BlockGenerator : MonoBehaviour
     }
     public List<BlockShape> allShape = new()
     {
-        new BlockShape(new [] { new Vector2Int(0, 0) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 0) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
-        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(1, 2) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2), new Vector2Int(1, 2) }),
-        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(2, 2) }),
-        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0) }),
-        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(0, 3), new Vector2Int(0, 4) }),
+        new BlockShape(new [] { new Vector2Int(0, 0) },4),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0) },6),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1) },6),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) },8),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0) },8),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1) },8),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1) },8),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1) },8),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 0) },8),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) },8),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) },8),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) },8),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) },10),
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) },10),
+
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(2, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(1, 2) },10),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2) },10),
+
+        new BlockShape(new [] { new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(1, 0) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(1, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(1, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(1, 2) },10),
+
+
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) },9),
+        new BlockShape(new [] { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) },9),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 2) },9),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(1, 2) },9),
+
+        new BlockShape(new [] { new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 0) },9),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 1) },9),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 1) },9),
+        new BlockShape(new [] { new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(2, 0) },9),
+
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1) },10),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(0, 2), new Vector2Int(1, 2) },10),
+
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(0, 2) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(2, 2) },12),
+
+        new BlockShape(new []{ new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(1, 2), new Vector2Int(2, 1)},12),
+
+        new BlockShape(new [] { new Vector2Int(2, 0), new Vector2Int(1, 1), new Vector2Int(0, 2) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 2) },12),
+
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(0, 2), new Vector2Int(1, 2), new Vector2Int(2, 2) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0) },12),
+        new BlockShape(new [] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2), new Vector2Int(0, 3), new Vector2Int(0, 4) },12),
 
         };
 }

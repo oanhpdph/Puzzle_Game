@@ -48,11 +48,11 @@ public class StateManager : MonoBehaviour
     public void ShowPausePanel()
     {
         panelPause.SetActive(true);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetOptionScreenClip());
+        //AudioController.Instance.PlayAudio(AudioAssets.Instance.GetOptionScreenClip());
     }
     public void HidePausePanel()
     {
         panelPause.SetActive(false);
-        AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
+        //AudioController.Instance.PlayAudio(AudioAssets.Instance.GetTitleScreenClip());
     }
 }
