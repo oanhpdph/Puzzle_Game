@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private CanvasGroup canvasGroup;
     private bool isMatch = true;
     private Vector3 scale;
-    private Vector2 lastPosition;
+    private Vector3 lastPosition;
 
     private void Start()
     {
@@ -26,8 +27,7 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         canvas = GetComponentInParent<Canvas>();
         canvasGroup = GetComponent<CanvasGroup>();
         scale = m_RectTransform.localScale;
-        grid = BoardController.Instance.cells;
-
+        grid = CellGenerator.Instance.cells;
 
         lastParent = transform.parent.gameObject;
         lastPosition = transform.localPosition;
@@ -52,9 +52,10 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             canvasGroup.blocksRaycasts = false;
             m_RectTransform.anchorMax = new Vector2(0, 1);
             m_RectTransform.anchorMin = new Vector2(0, 1);
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
 
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(mousePos);
+            mousePos.z = 0;
             transform.position = mousePos;
         }
     }
@@ -102,6 +103,7 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     {
         if (isMatch)
         {
+            SaveController.AddUndoData();
             foreach (var item in suitableLocation)
             {
                 Cell cell = item.GetComponent<Cell>();
@@ -111,16 +113,15 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                 Image imageItem = item.GetComponent<Image>();
                 imageItem.sprite = transform.GetChild(0).GetComponent<Image>().sprite;
                 imageItem.color = new Color(1, 1, 1, 1);
+                imageItem.type = Image.Type.Sliced;
                 imageItem.pixelsPerUnitMultiplier = 100;
-
                 cell.Status = 1;
                 //BoardController.Instance.CheckCol(col);
                 BoardController.Instance.FillRowCol(row, col);
             }
             BoardController.Instance.CheckFull();
-
-            BoardController.Instance.UI_Score.AddScore(transform.childCount, Camera.main.ScreenToWorldPoint(Input.mousePosition), 0);
             AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetCollidingClip());
+            BoardController.Instance.UI_Score.AddScore(transform.childCount, Camera.main.ScreenToWorldPoint(Input.mousePosition), 0);
             gameObject.SetActive(false);
             GameController.Instance.DropShapeAction();
         }
@@ -180,8 +181,8 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         foreach (var item in suitableLocation)
         {
             Image imageItem = item.GetComponent<Image>();
-            imageItem.sprite = SpriteController.Instance.GetSpriteDefault();
-            imageItem.color = new Color(0.9f, 0.65f, 0.4f, 1);
+            imageItem.sprite = GameController.Instance.SpriteConfig.GetSpriteDefault();
+            //imageItem.color = new Color(0.9f, 0.65f, 0.4f, 1);
             imageItem.pixelsPerUnitMultiplier = 1;
 
         }
@@ -204,5 +205,10 @@ public class MultipleDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         m_RectTransform.anchoredPosition = lastPosition;
         canvasGroup.alpha = 1;
         canvasGroup.blocksRaycasts = true;
+    }
+    public IEnumerator WaitEndFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
     }
 }

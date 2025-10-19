@@ -1,26 +1,16 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class AudioController : MonoBehaviour
+public class AudioController : PersistentSingleton<AudioController>
 {
-    private static AudioController instance { get; set; }
-    public static AudioController Instance => instance;
     [SerializeField] private AudioSource music;
 
     [SerializeField] private AudioSource SFX;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        bool sound = PlayerPrefs.GetInt("SoundOn", 1) == 1;//1 is on 0 is off
-        OnOffMusic(sound);
+        base.Awake();
+        OnOffMusic(PlayerData.Music);
     }
     public void PlayAudio(AudioClip audio)
     {

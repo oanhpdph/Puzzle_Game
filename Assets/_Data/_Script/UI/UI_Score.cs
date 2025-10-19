@@ -7,20 +7,22 @@ public class UI_Score : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI goalScoreUGUI;
     [SerializeField] private TextMeshProUGUI currentScoreUGUI;
-    [SerializeField] private GameObject highScoreNoti;
+    [SerializeField] private GameObject highScoreNotif;
 
-    private ScoreData scoreData;
     private Canvas canvas;
     public GameObject ScorePrefab;
     public GameObject ComboPrefab;
     private void Start()
     {
-        scoreData = GameController.Instance.scoreData;
-        scoreData ??= new()
+        ScorePrefab.CreatePool();
+        ComboPrefab.CreatePool();
+        highScoreNotif.CreatePool();
+        GameController.Instance.ScoreData ??= new()
         {
             currentScore = 0,
             goalScore = 0,
-            isHighScore = true
+            isHighScore = true,
+            combo = 0
         };
         DisplayScore();
         canvas = GetComponentInParent<Canvas>();
@@ -28,9 +30,10 @@ public class UI_Score : MonoBehaviour
 
     public void DisplayScore()
     {
+        ScoreData scoreData = GameController.Instance.ScoreData;
+
         goalScoreUGUI.text = scoreData.goalScore.ToString();
         currentScoreUGUI.text = scoreData.currentScore.ToString();
-
         if (scoreData.currentScore > scoreData.goalScore)
         {
             scoreData.goalScore = scoreData.currentScore;
@@ -38,29 +41,35 @@ public class UI_Score : MonoBehaviour
 
             if (!scoreData.isHighScore)
             {
-                StartCoroutine(ShowHighScoreNotification());
+                ShowHighScoreNotification();
                 scoreData.isHighScore = true;
             }
         }
     }
-    private IEnumerator ShowHighScoreNotification()
+    private void ShowHighScoreNotification()
     {
-        highScoreNoti.SetActive(true);
+        highScoreNotif.Use(1.5f, out var go);
+        go.transform.SetParent(canvas.transform);
+        go.transform.localScale = Vector3.one;
         AudioController.Instance.PlayOneShot(AudioAssets.Instance.GetWinClip());
-        yield return new WaitForSeconds(1.5f);
-        highScoreNoti.SetActive(false);
     }
     public void AddScore(float score, Vector2 worldPosition, int combo)
     {
-        GameObject popup = Instantiate(ScorePrefab, canvas.transform);
+        ScorePrefab.Use(0.5f, out var go);
+        go.transform.SetParent(canvas.transform);
+        go.transform.localScale = Vector3.one;
         if (combo >= 2)
         {
-            GameObject popupCombo = Instantiate(ComboPrefab, canvas.transform);
-            popupCombo.GetComponent<TextMeshProUGUI>().text = $"Combo x{combo}";
+            ComboPrefab.Use(0.5f, out var comboClone);
+            comboClone.transform.SetParent(canvas.transform);
+            comboClone.transform.localScale = Vector3.one;
+            comboClone.transform.localPosition = Vector3.zero;
+            comboClone.GetComponent<TextMeshProUGUI>().text = $"Combo x{combo}";
         }
-        popup.transform.position = worldPosition;
-        popup.GetComponent<TextMeshProUGUI>().text = "+" + score.ToString();
-        scoreData.currentScore += score;
+        go.transform.position = worldPosition;
+        go.GetComponent<TextMeshProUGUI>().text = $"+ {score}";
+        GameController.Instance.ScoreData.currentScore += score;
+        GameController.Instance.ScoreData.combo = combo;
         DisplayScore();
     }
 }

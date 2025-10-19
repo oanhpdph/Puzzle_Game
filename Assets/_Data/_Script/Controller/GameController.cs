@@ -1,44 +1,87 @@
 ﻿using System;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : PersistentSingleton<GameController>
 {
-    private static GameController instance { get; set; }
-    public static GameController Instance => instance;
-
+    [SerializeField] private SpriteConfig spriteConfig;
+    private ScoreData scoreData;
+    private SaveDataShape saveDataShape;
     public delegate void OnDropShape();
     public event OnDropShape onDropShape;
-    public event Action<StateGame> OnChangeState = delegate { };
-    public StateGame currentState;
-    public ScoreData scoreData;
-    private ISaveLoad saveLoad = new SaveLoad();
-
-    private void Awake()
+    private AllCell allCell;
+    private UndoData undoData;
+    protected override void Awake()
     {
-        scoreData = saveLoad.LoadData<ScoreData>("ScoreData.json");
-
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        base.Awake();
+    }
+    private void Start()
+    {
+        HUDSystem.Instance.Show<LoadingPanel>().StartLoading();
     }
     public void DropShapeAction()
     {
         onDropShape?.Invoke();
     }
-
-    public StateGame CurrentState
+    public void ReLoadData()
     {
-        get { return currentState; }
+        scoreData = SaveLoadExt.LoadData<ScoreData>(Flags.SCORE_DATA_FILE);
+        undoData = SaveLoadExt.LoadData<UndoData>(Flags.UNDO_DATA_FILE);
+        allCell = SaveLoadExt.LoadData<AllCell>(Flags.CELL_DATA_FILE);
+        saveDataShape = SaveLoadExt.LoadData<SaveDataShape>(Flags.BLOCK_DATA_FILE);
+    }
+    public SaveDataShape SaveDataShape
+    {
+        get
+        {
+            return saveDataShape;
+        }
         set
         {
-            currentState = value;
-            OnChangeState(currentState);
+            saveDataShape = value;
+        }
+    }
+    public ScoreData ScoreData
+    {
+        get
+        {
+            return scoreData;
+        }
+        set
+        {
+            scoreData = value;
+        }
+    }
+    public SpriteConfig SpriteConfig
+    {
+        get
+        {
+            return spriteConfig;
+        }
+        set
+        {
+            spriteConfig = value;
+        }
+    }
+    public UndoData UndoData
+    {
+        get
+        {
+            return undoData;
+        }
+        set
+        {
+            undoData = value;
+        }
+    }
+    public AllCell AllCell
+    {
+        get
+        {
+            return allCell;
+        }
+        set
+        {
+            allCell = value;
         }
     }
 }

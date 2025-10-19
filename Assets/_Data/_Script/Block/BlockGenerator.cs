@@ -6,19 +6,12 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
-public class BlockGenerator : MonoBehaviour
+public class BlockGenerator : Singleton<BlockGenerator>
 {
+    [SerializeField] private List<GameObject> ListBlocks;
     private List<CurrentBlock> currentBlocks = new();
-    private GameObject defaultBlock;
-
-    private GameObject cell;
     private List<Vector2Int> direction = new();
-    //private async void Awake()
-    //{
-    //    defaultBlock = await LoadAssets("DefaultBlock");
-    //    cell = await LoadAssets("ImageDefault");
 
-    //}
     private async Task<GameObject> LoadAssets(string name)
     {
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(name);
@@ -35,23 +28,17 @@ public class BlockGenerator : MonoBehaviour
             return null;
         }
     }
-    private async void Start()
+    private void Start()
     {
-        defaultBlock = await LoadAssets("DefaultBlock");
-        cell = await LoadAssets("ImageDefault");
         direction.Add(Vector2Int.left);
         direction.Add(Vector2Int.right);
         direction.Add(Vector2Int.up);
         direction.Add(Vector2Int.down);
         LoadBlock();
     }
-    private async void OnEnable()
+    private void OnEnable()
     {
-        //defaultBlock = await LoadAssets("DefaultBlock");
-        //cell = await LoadAssets("ImageDefault");
-
         GameController.Instance.onDropShape += CounterShapeDone;
-
     }
     private void OnDisable()
     {
@@ -86,30 +73,29 @@ public class BlockGenerator : MonoBehaviour
                 }
             }
         }
-
-        GameController.Instance.CurrentState = StateGame.end;
+        HUDSystem.Instance.Show<EndPanel>();
     }
     public void GeneratorBlock()
     {
         List<int> priorityShapes = GetSmartPriorityShape();
 
-
         for (int i = 0; i < priorityShapes.Count; i++)
         {
             DisplayBlock(priorityShapes[i], null, currentBlocks.Count);
         }
+        GameController.Instance.SaveDataShape = GetBlockData();
     }
 
     private List<int> GetSmartPriorityShape()
     {
 
         List<int> candidates;
-        if (GameController.Instance.scoreData.currentScore == 0)
+        if (GameController.Instance.ScoreData.currentScore == 0)
         {
             candidates = new List<int>() {
-                Random.Range(0, allShape.Count),
-                Random.Range(0, allShape.Count),
-                Random.Range(0, allShape.Count), };
+                Random.Range(0, ListBlocks.Count),
+                Random.Range(0, ListBlocks.Count),
+                Random.Range(0, ListBlocks.Count), };
             return candidates;
         }
         List<(int index, int score, int adjacentCell)> scored = new();
@@ -123,7 +109,7 @@ public class BlockGenerator : MonoBehaviour
         if (scored.Count == 0) return null;
 
         int maxScore = scored.Max(s => s.score);
-        var sorted = scored.OrderByDescending(s => (s.adjacentCell == allShape[s.index].maxAdjacentCell))
+        var sorted = scored.OrderByDescending(s => (s.adjacentCell == ListBlocks[s.index].GetComponent<MultipleDrag>().blockShape.maxAdjacentCell))
             .ThenByDescending(s => s.score)
             .ThenByDescending(s => s.adjacentCell).Select(s => s.index).ToList();
 
@@ -132,7 +118,7 @@ public class BlockGenerator : MonoBehaviour
         int easyCount = 1;
         int middleCount = 6;
         int hardCount = count;
-        if (GameController.Instance.scoreData.isHighScore)
+        if (GameController.Instance.ScoreData.isHighScore)
         {
             easyCount *= 2;
             middleCount *= 2;
@@ -246,18 +232,26 @@ public class BlockGenerator : MonoBehaviour
     private List<(int, BlockShape)> GetPriorityShape()
     {
         List<(int, BlockShape)> priorityShape = new();
-        for (int i = 0; i < allShape.Count; i++)
+        for (int i = 0; i < ListBlocks.Count; i++)
         {
-            if (CanPlace(BoardController.Instance.board, allShape[i]))
-                priorityShape.Add((i, allShape[i]));
+            if (CanPlace(BoardController.Instance.board, ListBlocks[i].GetComponent<MultipleDrag>().blockShape))
+                priorityShape.Add((i, ListBlocks[i].GetComponent<MultipleDrag>().blockShape));
         }
         return priorityShape;
     }
-    private void LoadBlock()
+    public void LoadBlock()
     {
-        ISaveLoad saveLoad = new SaveLoad();
-        SaveDataShape blockData = saveLoad.LoadData<SaveDataShape>(Flags.BLOCK_DATA_FILE);
-        if (blockData.blocks.Count > 0)
+        SaveDataShape blockData = GameController.Instance.SaveDataShape;
+
+        if (currentBlocks.Count > 0)
+        {
+            foreach (var item in currentBlocks)
+            {
+                Destroy(item.gameObject);
+            }
+            currentBlocks.Clear();
+        }
+        if (blockData != null && blockData.blocks.Count > 0)
         {
             for (int i = 0; i < blockData.blocks.Count; i++)
             {
@@ -279,42 +273,21 @@ public class BlockGenerator : MonoBehaviour
     }
     private GameObject DisplayBlock(int indexBlock, string spriteName, int index)
     {
-        BlockShape blockShape = allShape[indexBlock];
-        Sprite sprite = GetSprite(spriteName);
-        GameObject parrentObj = InstantiateParent(defaultBlock, transform);
-        parrentObj.GetComponent<MultipleDrag>().blockShape = blockShape;
-        foreach (var item in blockShape.cells)
-        {
-            GameObject generator = Instantiate(cell, parrentObj.transform);
-            generator.GetComponent<RectTransform>().anchoredPosition = new Vector2(100 * item.x, 100 * item.y);
-            generator.GetComponent<Image>().sprite = sprite;
-        }
+        BlockShape blockShape = ListBlocks[indexBlock].GetComponent<MultipleDrag>().blockShape;
+        ListBlocks[indexBlock].CreatePool();
+        ListBlocks[indexBlock].Use(out var cloneObj);
+        cloneObj.transform.SetParent(transform);
+        cloneObj.GetComponent<MultipleDrag>().blockShape = blockShape;
+        cloneObj.GetComponent<RenderBlock>().RenderSprite(spriteName);
+        cloneObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         float x = blockShape.cells.Max(c => c.x);
         float y = blockShape.cells.Max(c => c.y);
 
         Vector2 position = new(x * -25, 300 - 300 * index - y * 25);//0,25,50,100
-        parrentObj.transform.localPosition = position;
+        cloneObj.transform.localPosition = position;
 
-        currentBlocks.Add(new(index, indexBlock, parrentObj));
-        return parrentObj;
-    }
-    private Sprite GetSprite(string spriteName)
-    {
-        if (spriteName == null)
-        {
-            return SpriteController.Instance.GetRandomSpriteBlock();
-        }
-        return SpriteController.Instance.GetSpriteBlock(spriteName);
-
-    }
-    private GameObject InstantiateParent(GameObject patternObj, Transform transformParent)
-    {
-        GameObject patternClone = Instantiate(patternObj, transformParent);
-        patternClone.transform.SetParent(transform);
-        patternClone.transform.localScale = new(0.5f, 0.5f, 0.5f);
-        patternClone.name = currentBlocks.Count.ToString();
-        MultipleDrag multipleDrag = patternClone.GetComponent<MultipleDrag>();
-        return patternClone;
+        currentBlocks.Add(new(index, indexBlock, cloneObj));
+        return cloneObj;
     }
     public SaveDataShape GetBlockData()
     {
@@ -365,7 +338,7 @@ public class BlockGenerator : MonoBehaviour
     }
     public BlockShape GetShape(int index)
     {
-        return allShape[index];
+        return ListBlocks[index].GetComponent<MultipleDrag>().blockShape;
     }
     public List<BlockShape> allShape = new()
     {

@@ -9,7 +9,7 @@ public class FloatingScore : MonoBehaviour
 
     void Start()
     {
-        Destroy(gameObject, lifeTime);
+        //this.gam(gameObject, lifeTime);e
     }
 
     // Update is called once per frame
@@ -21,5 +21,9 @@ public class FloatingScore : MonoBehaviour
     public void SetScore(float score)
     {
         textMeshProUGUI.text = "+" + score;
+    }
+    private void OnDestroy()
+    {
+        Debug.Log("destroy" + gameObject.name);
     }
 }

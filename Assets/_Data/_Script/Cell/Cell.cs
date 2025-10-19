@@ -18,8 +18,7 @@ public class Cell : MonoBehaviour
     {
         Image imageCell = GetComponent<Image>();
 
-        imageCell.sprite = SpriteController.Instance.GetSpriteDefault();
-        imageCell.color = new(0.9f, 0.65f, 0.4f, 1);
+        imageCell.sprite = GameController.Instance.SpriteConfig.spriteDefault;
         imageCell.pixelsPerUnitMultiplier = 1;
 
         Status = 0;
